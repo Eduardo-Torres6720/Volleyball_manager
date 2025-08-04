@@ -1,0 +1,13 @@
+{
+  "nome": "Time 1",
+  "ranking": 1,
+  "escalacao": [
+    {
+      "nome": "1",
+      "time": "Time 1",
+      "funcao": "Central",
+      "numero": "231",
+      "altura": "00"
+    }
+  ]
+}

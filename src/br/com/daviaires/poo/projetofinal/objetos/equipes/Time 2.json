@@ -1,0 +1,13 @@
+{
+  "nome": "Time 2",
+  "ranking": 10,
+  "escalacao": [
+    {
+      "nome": "Aldo",
+      "time": "Time 2",
+      "funcao": "Ponteiro",
+      "numero": "11",
+      "altura": "1.75"
+    }
+  ]
+}
