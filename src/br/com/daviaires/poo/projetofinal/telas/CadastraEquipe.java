@@ -157,7 +157,7 @@ public class CadastraEquipe {
                         case "Levantador":
                             quantfuncao[1]++;
                             break;
-                        case "Libero":
+                        case "Líbero":
                             quantfuncao[2]++;
                             break;
                         case "Oposto":
@@ -174,7 +174,7 @@ public class CadastraEquipe {
                 }
                 if((quantfuncao[0] == 2 && dados[3] == "Central") ||
                  (quantfuncao[1] == 1 && dados[3] == "Levantador") || 
-                 (quantfuncao[2] == 1 && dados[3] == "Libero") ||
+                 (quantfuncao[2] == 1 && dados[3] == "Líbero") ||
                  (quantfuncao[3] == 1 && dados[3] == "Oposto") ||
                  (quantfuncao[4] == 2 && dados[3] == "Ponteiro")) {
                     JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
