@@ -148,7 +148,39 @@ public class CadastraEquipe {
             public void actionPerformed(ActionEvent e){
                 String[] dados = {textJogadorNome.getText(), textJogadorNumero.getText(), textJogadorAltura.getText(), comboJogadorFuncao.getSelectedItem().toString()};
                 DefaultTableModel tableModel = (DefaultTableModel)tabelaEscalacao.getModel();
-                tableModel.addRow(dados);
+                int[] quantfuncao = {0, 0, 0, 0, 0};
+                for(int i = 0; i < tableModel.getRowCount(); i++) {
+                    switch (tableModel.getValueAt(i, 3).toString()) {
+                        case "Central":
+                            quantfuncao[0]++;
+                            break;
+                        case "Levantador":
+                            quantfuncao[1]++;
+                            break;
+                        case "Libero":
+                            quantfuncao[2]++;
+                            break;
+                        case "Oposto":
+                            quantfuncao[3]++;
+                            break;
+                        case "Ponteiro":
+                            quantfuncao[4]++;
+                            break;
+                    
+                        default:
+                            JOptionPane.showMessageDialog(buttonCadastrarJogador, "Função inexistente", "Aviso", JOptionPane.ERROR_MESSAGE);
+                            break;
+                    }
+                }
+                if((quantfuncao[0] == 2 && dados[3] == "Central") ||
+                 (quantfuncao[1] == 1 && dados[3] == "Levantador") || 
+                 (quantfuncao[2] == 1 && dados[3] == "Libero") ||
+                 (quantfuncao[3] == 1 && dados[3] == "Oposto") ||
+                 (quantfuncao[4] == 2 && dados[3] == "Ponteiro")) {
+                    JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
+                } else {
+                    tableModel.addRow(dados);
+                }
             }
         });
         botoes.add(buttonCadastrarJogador, BorderLayout.CENTER);
@@ -182,13 +214,15 @@ public class CadastraEquipe {
                     Vector rowData = dataVector.elementAt(i);
                     switch (rowData.elementAt(3).toString()){
                         case "Central":
-                            equipe.escalarJogador(new Central(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
+                                equipe.escalarJogador(new Central(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
                             break;
                         case "Levantador":
                             equipe.escalarJogador(new Levantador(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
+
                             break;
                         case "Libero":
                             equipe.escalarJogador(new Libero(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
+
                             break;
                         case "Oposto":
                             equipe.escalarJogador(new Oposto(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
