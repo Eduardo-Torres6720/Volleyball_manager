@@ -1,0 +1,55 @@
+{
+  "nome": "Brasil",
+  "ranking": 3,
+  "escalacao": [
+    {
+      "nome": "Alan",
+      "time": "Brasil",
+      "funcao": "Oposto",
+      "numero": "4",
+      "altura": "2.02"
+    },
+    {
+      "nome": "Matheus",
+      "time": "Brasil",
+      "funcao": "Levantador",
+      "numero": "5",
+      "altura": "1.85"
+    },
+    {
+      "nome": "Honorato",
+      "time": "Brasil",
+      "funcao": "Ponteiro",
+      "numero": "8",
+      "altura": "1.90"
+    },
+    {
+      "nome": "Lucarelli",
+      "time": "Brasil",
+      "funcao": "Ponteiro",
+      "numero": "18",
+      "altura": "1.96"
+    },
+    {
+      "nome": "Judson",
+      "time": "Brasil",
+      "funcao": "Central",
+      "numero": "11",
+      "altura": "2.04"
+    },
+    {
+      "nome": "Flávio",
+      "time": "Brasil",
+      "funcao": "Central",
+      "numero": "23",
+      "altura": "1.99"
+    },
+    {
+      "nome": "Maique",
+      "time": "Brasil",
+      "funcao": "Líbero",
+      "numero": "15",
+      "altura": "1.87"
+    }
+  ]
+}

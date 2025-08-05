@@ -43,9 +43,9 @@ public class Inicial {
         buttonIniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                CadastraEquipe cadastraEquipe = new CadastraEquipe();
-                cadastraEquipe.inicializa();
-                cadastraEquipe.show();
+                SelecionaFuncao selecionaFuncao = new SelecionaFuncao();
+                selecionaFuncao.inicializa();
+                selecionaFuncao.show();
                 frame.dispose();
             }
         });

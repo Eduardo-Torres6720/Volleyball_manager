@@ -39,7 +39,7 @@ public class CadastraEquipe {
 
         JLabel tituloApp = new JLabel("CADASTRO DE EQUIPES");
         tituloApp.setHorizontalAlignment(SwingConstants.CENTER);
-        JLabel sloganApp = new JLabel("Preencha com os dados da primeira equipe");
+        JLabel sloganApp = new JLabel("Preencha com os dados da equipe (2 Centrais, 2 Ponteiros, 1 Levantador, 1 Líbero, 1 Oposto,)");
         sloganApp.setHorizontalAlignment(SwingConstants.CENTER);
         titulo.add(tituloApp, BorderLayout.CENTER);
         titulo.add(sloganApp, BorderLayout.CENTER);
@@ -146,40 +146,42 @@ public class CadastraEquipe {
         buttonCadastrarJogador.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                String[] dados = {textJogadorNome.getText(), textJogadorNumero.getText(), textJogadorAltura.getText(), comboJogadorFuncao.getSelectedItem().toString()};
-                DefaultTableModel tableModel = (DefaultTableModel)tabelaEscalacao.getModel();
-                int[] quantfuncao = {0, 0, 0, 0, 0};
-                for(int i = 0; i < tableModel.getRowCount(); i++) {
-                    switch (tableModel.getValueAt(i, 3).toString()) {
-                        case "Central":
-                            quantfuncao[0]++;
-                            break;
-                        case "Levantador":
-                            quantfuncao[1]++;
-                            break;
-                        case "Líbero":
-                            quantfuncao[2]++;
-                            break;
-                        case "Oposto":
-                            quantfuncao[3]++;
-                            break;
-                        case "Ponteiro":
-                            quantfuncao[4]++;
-                            break;
-                    
-                        default:
-                            JOptionPane.showMessageDialog(buttonCadastrarJogador, "Função inexistente", "Aviso", JOptionPane.ERROR_MESSAGE);
-                            break;
+                if(!textJogadorNome.getText().isBlank() && !textJogadorNumero.getText().isBlank() && !textJogadorAltura.getText().isBlank()) {
+                    String[] dados = {textJogadorNome.getText(), textJogadorNumero.getText(), textJogadorAltura.getText(), comboJogadorFuncao.getSelectedItem().toString()};
+                    DefaultTableModel tableModel = (DefaultTableModel) tabelaEscalacao.getModel();
+                    int[] quantfuncao = {0, 0, 0, 0, 0};
+                    for (int i = 0; i < tableModel.getRowCount(); i++) {
+                        switch (tableModel.getValueAt(i, 3).toString()) {
+                            case "Central":
+                                quantfuncao[0]++;
+                                break;
+                            case "Levantador":
+                                quantfuncao[1]++;
+                                break;
+                            case "Líbero":
+                                quantfuncao[2]++;
+                                break;
+                            case "Oposto":
+                                quantfuncao[3]++;
+                                break;
+                            case "Ponteiro":
+                                quantfuncao[4]++;
+                                break;
+
+                            default:
+                                JOptionPane.showMessageDialog(buttonCadastrarJogador, "Função inexistente", "Aviso", JOptionPane.ERROR_MESSAGE);
+                                break;
+                        }
                     }
-                }
-                if((quantfuncao[0] == 2 && dados[3] == "Central") ||
-                 (quantfuncao[1] == 1 && dados[3] == "Levantador") || 
-                 (quantfuncao[2] == 1 && dados[3] == "Líbero") ||
-                 (quantfuncao[3] == 1 && dados[3] == "Oposto") ||
-                 (quantfuncao[4] == 2 && dados[3] == "Ponteiro")) {
-                    JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    tableModel.addRow(dados);
+                    if ((quantfuncao[0] == 2 && dados[3] == "Central") ||
+                            (quantfuncao[1] == 1 && dados[3] == "Levantador") ||
+                            (quantfuncao[2] == 1 && dados[3] == "Líbero") ||
+                            (quantfuncao[3] == 1 && dados[3] == "Oposto") ||
+                            (quantfuncao[4] == 2 && dados[3] == "Ponteiro")) {
+                        JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        tableModel.addRow(dados);
+                    }
                 }
             }
         });
@@ -202,7 +204,7 @@ public class CadastraEquipe {
 
         JButton buttonConfirmar = new JButton("Confirmar");
         buttonConfirmar.setFocusable(false);
-        buttonConfirmar.setToolTipText("Confirma o cadastro e avança para o próximo passo");
+        buttonConfirmar.setToolTipText("Confirma o cadastro");
         buttonConfirmar.setPreferredSize(new Dimension(200, 50));
         buttonConfirmar.addActionListener(new ActionListener() {
             @Override
@@ -220,7 +222,7 @@ public class CadastraEquipe {
                             equipe.escalarJogador(new Levantador(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
 
                             break;
-                        case "Libero":
+                        case "Líbero":
                             equipe.escalarJogador(new Libero(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
 
                             break;
@@ -266,9 +268,9 @@ public class CadastraEquipe {
         buttonVoltar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inicial inicial = new Inicial();
-                inicial.inicializa();
-                inicial.show();
+                SelecionaFuncao selecionaFuncao = new SelecionaFuncao();
+                selecionaFuncao.inicializa();
+                selecionaFuncao.show();
                 frame.dispose();
             }
         });

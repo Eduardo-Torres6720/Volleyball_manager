@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class Equipe implements Serializable{
     private final String nome;
     private final int ranking;
-    private ArrayList<Jogador> escalacao = new ArrayList<>();
+    private ArrayList<Object> escalacao = new ArrayList<>();
 
     public Equipe(String nome, int ranking) {
         this.nome = nome;
@@ -22,9 +22,6 @@ public class Equipe implements Serializable{
     public void equipeInfo(){
         System.out.println("Nome do time: " + this.getNome());
         System.out.println("Ranking do time: " + this.getRanking());
-        for (Jogador jogador : this.getEscalacao()){
-            jogador.infoJogador();
-        }
     }
 
     public void salvaEquipe() throws IOException {
@@ -44,7 +41,7 @@ public class Equipe implements Serializable{
         return ranking;
     }
 
-    public ArrayList<Jogador> getEscalacao() {
+    public ArrayList<Object> getEscalacao() {
         return escalacao;
     }
 }
