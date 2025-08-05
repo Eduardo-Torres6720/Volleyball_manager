@@ -34,6 +34,7 @@ public class SelecionaFuncao {
         JLabel labelTitulo = new JLabel();
         labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
         labelTitulo.setText("PARTIDA");
+        panelNomesEquipes.add(labelTitulo);
 
         JLabel labelEquipes = new JLabel();
         labelEquipes.setHorizontalAlignment(SwingConstants.CENTER);
