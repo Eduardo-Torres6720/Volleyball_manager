@@ -7,6 +7,7 @@ import br.com.daviaires.poo.projetofinal.validacao.Validardor;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,15 +16,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CadastraEquipe {
     private JFrame frame;
     private JTextField textEquipeNome, textRanking;
     private JTextField textJogadorNome, textJogadorNumero, textJogadorAltura;
     private JComboBox<String> comboJogadorFuncao;
+    private String caminhoArquivoJson = "src/br/com/daviaires/poo/projetofinal/objetos/equipes/Equipes.json";
     private JTable tabelaEscalacao;
     private DefaultTableModel tableModel;
     private JButton buttonCadastrarJogador, buttonExcluirJogador, buttonConfirmar, buttonVoltar;
@@ -287,15 +292,38 @@ public class CadastraEquipe {
         salvarEquipeComoJson(equipe);
         
         JOptionPane.showMessageDialog(frame, "Equipe " + equipe.getNome() + " cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        SelecionaFuncao selecaoTela = new SelecionaFuncao(null);
+        selecaoTela.show();
         frame.dispose();
+    }
+
+    private List<Equipe> carregarDadosJson() {
+        Gson gson = new Gson();
+
+        List<Equipe> equipes = new ArrayList<>();
+        try (FileReader reader = new FileReader(caminhoArquivoJson)) {
+            java.lang.reflect.Type tipoListaEquipe = new TypeToken<List<Equipe>>() {}.getType();
+            equipes = gson.fromJson(reader, tipoListaEquipe);
+            return equipes;
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao ler os dados da equipe: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao processar dados da equipe: " + e.getMessage(), "Erro", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+        return null;
     }
     
     private void salvarEquipeComoJson(Equipe equipe){
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        String path = "src/br/com/daviaires/poo/projetofinal/objetos/equipes/" + equipe.getNome() + ".json";
 
-        try (FileWriter fw = new FileWriter(path)) {
-            gson.toJson(equipe, fw);
+        List<Equipe> equipes = carregarDadosJson();
+
+        equipes.add(equipe);
+
+        try (FileWriter fw = new FileWriter(caminhoArquivoJson)) {
+            gson.toJson(equipes, fw);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(frame, "Erro ao salvar o arquivo: " + e.getMessage(), "Erro de I/O", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
