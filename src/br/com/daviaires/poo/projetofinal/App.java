@@ -12,8 +12,6 @@ public class App {
             public void run() {
                 Inicial inicial = new Inicial();
                 inicial.show();
-                //SelecionaFuncao selecionaFuncao = new SelecionaFuncao();
-                //selecionaFuncao.show();
             }
         });
     }

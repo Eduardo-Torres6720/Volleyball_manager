@@ -15,6 +15,12 @@ public class Equipe implements Serializable{
         this.ranking = ranking;
     }
 
+    public Equipe(String nome, int ranking, ArrayList<Object> escalacao) {
+        this.nome = nome;
+        this.ranking = ranking;
+        this.escalacao = escalacao;
+    }
+
     public void escalarJogador(Jogador jogador){
         this.escalacao.add(jogador);
     }
