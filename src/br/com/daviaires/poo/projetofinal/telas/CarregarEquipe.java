@@ -130,7 +130,6 @@ public class CarregarEquipe extends JFrame {
 
         SelecionaFuncao selecionaFuncao = new SelecionaFuncao(listaDeEquipesSelecionadas);
         selecionaFuncao.show();
-        setVisible(false);
     }
 
     public static void main(String[] args) {
