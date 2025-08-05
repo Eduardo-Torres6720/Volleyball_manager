@@ -303,6 +303,8 @@ public class CadastraEquipe {
     }
 
     private void voltarTela() {
+        SelecionaFuncao telaFuncao = new SelecionaFuncao(null);
+        telaFuncao.show();
         frame.dispose();
     }
 

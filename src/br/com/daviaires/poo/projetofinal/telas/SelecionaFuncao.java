@@ -12,16 +12,17 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelecionaFuncao {
     private JFrame frame;
 
-    public SelecionaFuncao(){ inicializa(); }
+    public SelecionaFuncao(List<Equipe> equipesSelecionadas){ inicializa(equipesSelecionadas); }
 
-    public void inicializa(){
+    public void inicializa(List<Equipe> equipesSelecionadas){
         frame = new JFrame();
         this.frame.setTitle("Volleyball Manager");
-        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(800, 500);
         this.frame.setResizable(false);
         this.frame.setLocationRelativeTo(null);
@@ -38,7 +39,11 @@ public class SelecionaFuncao {
 
         JLabel labelEquipes = new JLabel();
         labelEquipes.setHorizontalAlignment(SwingConstants.CENTER);
-        labelEquipes.setText("X");
+        if (equipesSelecionadas == null) {
+            labelEquipes.setText("X");
+        } else {
+            labelEquipes.setText(equipesSelecionadas.get(0).getNome() + " X " + equipesSelecionadas.get(1).getNome());
+        }
         panelNomesEquipes.add(labelEquipes);
 
         JPanel botoes = new JPanel();
@@ -67,23 +72,9 @@ public class SelecionaFuncao {
         buttonCarregaEquipes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ArrayList<Equipe> equipes = new ArrayList<>();
-                while(equipes.size()<2) {
-                    JFileChooser fileChooser = new JFileChooser("src/br/com/daviaires/poo/projetofinal/objetos/equipes");
-                    if (fileChooser.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        try {
-                            Reader reader = new FileReader(selectedFile.getPath());
-                            Equipe equipe = new Gson().fromJson(reader, Equipe.class);
-                            equipes.add(equipe);
-                        } catch (FileNotFoundException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                }
-                labelEquipes.setText(equipes.get(0).getNome() + " X " + equipes.get(1).getNome());
-                equipes.get(0).equipeInfo();
-                equipes.get(1).equipeInfo();
+                CarregarEquipe carregarEquipe = new CarregarEquipe();
+                carregarEquipe.setVisible(true);
+                frame.setVisible(false);
             }
         });
         botoes.add(buttonCarregaEquipes, BorderLayout.CENTER);

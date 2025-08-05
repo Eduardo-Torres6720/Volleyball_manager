@@ -43,8 +43,8 @@ public class Inicial {
         buttonIniciar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SelecionaFuncao selecionaFuncao = new SelecionaFuncao();
-                selecionaFuncao.inicializa();
+                SelecionaFuncao selecionaFuncao = new SelecionaFuncao(null);
+                selecionaFuncao.inicializa(null);
                 selecionaFuncao.show();
                 frame.dispose();
             }
