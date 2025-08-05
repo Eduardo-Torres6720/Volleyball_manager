@@ -1,0 +1,55 @@
+{
+  "nome": "Polônia",
+  "ranking": 1,
+  "escalacao": [
+    {
+      "nome": "Komenda",
+      "time": "Polônia",
+      "funcao": "Levantador",
+      "numero": "4",
+      "altura": "1.98"
+    },
+    {
+      "nome": "Leon",
+      "time": "Polônia",
+      "funcao": "Ponteiro",
+      "numero": "9",
+      "altura": "2.01"
+    },
+    {
+      "nome": "Kochanowski",
+      "time": "Polônia",
+      "funcao": "Central",
+      "numero": "15",
+      "altura": "1.99"
+    },
+    {
+      "nome": "Bednorz",
+      "time": "Polônia",
+      "funcao": "Ponteiro",
+      "numero": "10",
+      "altura": "2.01"
+    },
+    {
+      "nome": "Jakubiszak",
+      "time": "Polônia",
+      "funcao": "Central",
+      "numero": "34",
+      "altura": "2.10"
+    },
+    {
+      "nome": "Sasak",
+      "time": "Polônia",
+      "funcao": "Oposto",
+      "numero": "35",
+      "altura": "2.08"
+    },
+    {
+      "nome": "Popiwczak",
+      "time": "Polônia",
+      "funcao": "Líbero",
+      "numero": "3",
+      "altura": "1.80"
+    }
+  ]
+}
