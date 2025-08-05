@@ -6,6 +6,16 @@ public class Central extends Jogador{
         super(nome, time, funcao, numero, altura);
     }
 
+    @Override
+    public float defesa() {
+        return 0;
+    }
+
+    @Override
+    public float levantamento() {
+        return 0;
+    }
+
     public float saque(){
         return 0;
     }

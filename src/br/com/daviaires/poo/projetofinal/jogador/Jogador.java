@@ -5,14 +5,14 @@ import java.util.Objects;
 
 public abstract class Jogador implements Serializable {
     private final String nome;
-    private final String time;
+    private final String equipe;
     private final String funcao;
     private final String numero;
     private final String altura;
 
-    public Jogador(String nome, String time, String funcao, String numero, String altura) {
+    public Jogador(String nome, String equipe, String funcao, String numero, String altura) {
         this.nome = nome;
-        this.time = time;
+        this.equipe = equipe;
         this.funcao = funcao;
         this.numero = numero;
         this.altura = altura;
@@ -26,20 +26,16 @@ public abstract class Jogador implements Serializable {
         System.out.println("Altura: " + this.getAltura());
     }
 
-    public float defesa(){
-        return 0;
-    }
+    public abstract float defesa();
 
-    public float levantamento(){
-        return 0;
-    }
+    public abstract float levantamento();
 
     public String getNome() {
         return nome;
     }
 
-    public String getTime() {
-        return time;
+    public String getEquipe() {
+        return equipe;
     }
 
     public String getFuncao() {
