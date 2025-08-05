@@ -21,243 +21,303 @@ import java.util.Vector;
 
 public class CadastraEquipe {
     private JFrame frame;
+    private JTextField textEquipeNome, textRanking;
+    private JTextField textJogadorNome, textJogadorNumero, textJogadorAltura;
+    private JComboBox<String> comboJogadorFuncao;
+    private JTable tabelaEscalacao;
+    private DefaultTableModel tableModel;
+    private JButton buttonCadastrarJogador, buttonExcluirJogador, buttonConfirmar, buttonVoltar;
 
-    public CadastraEquipe(){
+    // Constantes para as funções
+    private static final String CENTRAL = "Central";
+    private static final String LEVANTADOR = "Levantador";
+    private static final String LIBERO = "Líbero";
+    private static final String OPOSTO = "Oposto";
+    private static final String PONTEIRO = "Ponteiro";
+
+    public CadastraEquipe() {
         inicializa();
     }
 
-    public void inicializa(){
-        frame = new JFrame();
-        this.frame.setTitle("Cadastrar Equipes");
-        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.frame.setSize(800, 500);
-        this.frame.setResizable(false);
-        this.frame.setLocationRelativeTo(null);
-        this.frame.setLayout(new GridLayout(4,1,5,5));
+    public void inicializa() {
+        // --- 1. Inicialização e Configuração dos Componentes ---
+        frame = new JFrame("Cadastrar Equipes");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(800, 550);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
-        JPanel titulo = new JPanel();
-        titulo.setLayout(new GridLayout(2,1,5,5));
-        frame.add(titulo, BorderLayout.NORTH);
+        textEquipeNome = new JTextField(20);
+        textRanking = new JTextField(20);
 
-        JLabel tituloApp = new JLabel("CADASTRO DE EQUIPES");
-        tituloApp.setHorizontalAlignment(SwingConstants.CENTER);
-        JLabel sloganApp = new JLabel("Preencha com os dados da equipe (2 Centrais, 2 Ponteiros, 1 Levantador, 1 Líbero, 1 Oposto,)");
-        sloganApp.setHorizontalAlignment(SwingConstants.CENTER);
-        titulo.add(tituloApp, BorderLayout.CENTER);
-        titulo.add(sloganApp, BorderLayout.CENTER);
-
-        JPanel dadosEquipe = new JPanel();
-        dadosEquipe.setLayout(new GridLayout(2,2,5,5));
-        frame.add(dadosEquipe, BorderLayout.CENTER);
-
-        JLabel labelEquipeNome = new JLabel("Equipe");
-        labelEquipeNome.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosEquipe.add(labelEquipeNome);
-        JTextField textEquipeNome = new JTextField();
-        dadosEquipe.add(textEquipeNome);
-        JLabel labelRanking = new JLabel("Ranking");
-        labelRanking.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosEquipe.add(labelRanking);
-        JTextField textRanking = new JTextField();
-        textRanking.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-
-                if(!Character.isDigit(c)){
-                    e.setKeyChar('\u0000');
-                }
-            }
-        });
-        dadosEquipe.add(textRanking);
-
-        JPanel dadosJogador = new JPanel();
-        dadosJogador.setLayout(new GridLayout(4,2,5,5));
-
-        JLabel labelJogadorNome = new JLabel("Nome");
-        labelJogadorNome.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosJogador.add(labelJogadorNome);
-        JTextField textJogadorNome = new JTextField();
-        dadosJogador.add(textJogadorNome);
-        JLabel labelJogadorNumero = new JLabel("Número");
-        labelJogadorNumero.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosJogador.add(labelJogadorNumero);
-        JTextField textJogadorNumero = new JTextField();
-        textJogadorNumero.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                char c = e.getKeyChar();
-
-                if(!Character.isDigit(c)){
-                    e.setKeyChar('\u0000');
-                }
-            }
-        });
-        dadosJogador.add(textJogadorNumero);
-        JLabel labelJogadorAltura = new JLabel("Altura");
-        labelJogadorAltura.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosJogador.add(labelJogadorAltura);
-        JTextField textJogadorAltura = new JTextField();
+        textJogadorNome = new JTextField(15);
+        textJogadorNumero = new JTextField(15);
+        textJogadorAltura = new JTextField(15);
         textJogadorAltura.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 char c = e.getKeyChar();
-
-                if(!Character.isDigit(c)){
-                    if(c != '.') {
-                        e.setKeyChar('\u0000');
-                    }
+                if (!Character.isDigit(c) && (c != '.' || textJogadorAltura.getText().contains("."))) {
+                    e.consume();
                 }
             }
         });
-        dadosJogador.add(textJogadorAltura);
-        JLabel labelJogadorFuncao = new JLabel("Função");
-        labelJogadorFuncao.setHorizontalAlignment(SwingConstants.CENTER);
-        dadosJogador.add(labelJogadorFuncao);
-        String[] funcoes = {"Central", "Levantador", "Líbero", "Oposto", "Ponteiro"};
-        JComboBox<String> comboJogadorFuncao = new JComboBox<String>(funcoes);
-        dadosJogador.add(comboJogadorFuncao);
 
-        JPanel tabelaJogadores = new JPanel();
+        String[] funcoes = {CENTRAL, LEVANTADOR, LIBERO, OPOSTO, PONTEIRO};
+        comboJogadorFuncao = new JComboBox<>(funcoes);
+
         String[] colunas = {"Nome", "Número", "Altura", "Função"};
-        JTable tabelaEscalacao = new JTable();
-        tabelaEscalacao.setModel(new DefaultTableModel(null,colunas){
+        tableModel = new DefaultTableModel(null, colunas) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
-        });
-        JScrollPane scrollPane = new JScrollPane(tabelaEscalacao);
-        tabelaJogadores.add(scrollPane);
+        };
+        tabelaEscalacao = new JTable(tableModel);
+        
+        buttonCadastrarJogador = new JButton("Cadastrar Jogador");
+        buttonExcluirJogador = new JButton("Excluir Jogador");
+        buttonConfirmar = new JButton("Confirmar");
+        buttonVoltar = new JButton("Voltar");
 
-        JPanel areaDados = new JPanel();
-        areaDados.setLayout(new GridLayout(1,2,5,5));
-        areaDados.add(dadosJogador);
-        areaDados.add(tabelaJogadores);
-
-        frame.add(areaDados, BorderLayout.CENTER);
-
-        JPanel botoes = new JPanel();
-        botoes.setLayout(new GridLayout(4,2,5,5));
-        frame.add(botoes, BorderLayout.CENTER);
-
-        JButton buttonCadastrarJogador = new JButton("Cadastrar Jogador");
-        buttonCadastrarJogador.setFocusable(false);
-        buttonCadastrarJogador.setToolTipText("Inclui o jogador na lista da escalação");
-        buttonCadastrarJogador.setPreferredSize(new Dimension(200, 50));
-        buttonCadastrarJogador.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e){
-                if(!textJogadorNome.getText().isBlank() && !textJogadorNumero.getText().isBlank() && !textJogadorAltura.getText().isBlank()) {
-                    String[] dados = {textJogadorNome.getText(), textJogadorNumero.getText(), textJogadorAltura.getText(), comboJogadorFuncao.getSelectedItem().toString()};
-                    DefaultTableModel tableModel = (DefaultTableModel) tabelaEscalacao.getModel();
-                    if (Validardor.validarQuantFuncao(tableModel, dados)) {
-                        tableModel.addRow(dados);
-                    } else {
-                        JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            }
-        });
-        botoes.add(buttonCadastrarJogador, BorderLayout.CENTER);
-
-        JButton buttonExcluirJogador = new JButton("Excluir Jogador");
-        buttonExcluirJogador.setFocusable(false);
-        buttonExcluirJogador.setToolTipText("Exclui da lista o jogador selecionado");
-        buttonExcluirJogador.setPreferredSize(new Dimension(200, 50));
-        buttonExcluirJogador.addActionListener(new ActionListener(){
-           @Override
-           public void actionPerformed(ActionEvent e){
-               DefaultTableModel tblModel = (DefaultTableModel)tabelaEscalacao.getModel();
-               if(tabelaEscalacao.getSelectedRowCount()==1){
-                   tblModel.removeRow(tabelaEscalacao.getSelectedRow());
-               } else {
-                JOptionPane.showMessageDialog(buttonCadastrarJogador, "Selecione o jogador que deseja excluir!", "Aviso", JOptionPane.ERROR_MESSAGE);
-               }
-           }
-        });
-        botoes.add(buttonExcluirJogador);
-
-        JButton buttonConfirmar = new JButton("Confirmar");
-        buttonConfirmar.setFocusable(false);
-        buttonConfirmar.setToolTipText("Confirma o cadastro");
-        buttonConfirmar.setPreferredSize(new Dimension(200, 50));
-        buttonConfirmar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Equipe equipe = new Equipe(textEquipeNome.getText(), Integer.parseInt(textRanking.getText()));
-                DefaultTableModel tableModel = (DefaultTableModel)tabelaEscalacao.getModel();
-                Vector<Vector> dataVector =tableModel.getDataVector();
-                for(int i = 0; i < dataVector.size(); i++){
-                    Vector rowData = dataVector.elementAt(i);
-                    switch (rowData.elementAt(3).toString()){
-                        case "Central":
-                            equipe.escalarJogador(new Central(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
-                            break;
-                        case "Levantador":
-                            equipe.escalarJogador(new Levantador(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
-
-                            break;
-                        case "Líbero":
-                            equipe.escalarJogador(new Libero(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
-
-                            break;
-                        case "Oposto":
-                            equipe.escalarJogador(new Oposto(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
-                            break;
-                        case "Ponteiro":
-                            equipe.escalarJogador(new Ponteiro(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
-                            break;
-                    }
-                }
-                if(Validardor.validarDadosTamanhoEquipe(equipe)) {
-                    Gson gson = new GsonBuilder()
-                    .setPrettyPrinting()
-                    .create();
-                    FileWriter fw = null;
-                    try {
-                        fw = new FileWriter("src/br/com/daviaires/poo/projetofinal/objetos/equipes/" + equipe.getNome() + ".json");
-                    } catch (IOException exception) {
-                        throw new RuntimeException(exception);
-                    }
-                    gson.toJson(equipe, fw);
-                    try {
-                        fw.close();
-                    } catch (IOException exception) {
-                        throw new RuntimeException(exception);
-                    }
-                    EquipeCadastrada equipeCadastrada = new EquipeCadastrada();
-                    equipeCadastrada.inicializa();
-                    equipeCadastrada.show();
-                    System.out.println(equipe.getNome() + " cadastrada");
-                    frame.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(buttonConfirmar, "É necessário ter um total de 7 jogadores em uma partida", "Aviso", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        buttonCadastrarJogador.addActionListener(e -> adicionarJogador());
+        buttonExcluirJogador.addActionListener(e -> excluirJogador());
+        buttonConfirmar.addActionListener(e -> confirmarCadastro());
+        buttonVoltar.addActionListener(e -> voltarTela());
 
 
-        botoes.add(buttonConfirmar, BorderLayout.CENTER);
+        // --- 2. Montagem do Layout ---
+        frame.setLayout(new BorderLayout(5, 5));
+        
+        JPanel painelGeral = new JPanel(new BorderLayout(10, 10));
+        painelGeral.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        painelGeral.add(criarPainelTitulo(), BorderLayout.NORTH);
+        painelGeral.add(criarPainelCentral(), BorderLayout.CENTER);
+        painelGeral.add(criarPainelBotoes(), BorderLayout.SOUTH);
 
-
-        JButton buttonVoltar = new JButton("Voltar");
-        buttonVoltar.setFocusable(false);
-        buttonVoltar.setToolTipText("Retorna para a tela inicial");
-        buttonVoltar.setPreferredSize(new Dimension(200, 50));
-        buttonVoltar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SelecionaFuncao selecionaFuncao = new SelecionaFuncao();
-                selecionaFuncao.inicializa();
-                selecionaFuncao.show();
-                frame.dispose();
-            }
-        });
-        botoes.add(buttonVoltar, BorderLayout.CENTER);
+        frame.add(painelGeral, BorderLayout.CENTER);
     }
 
-    public void show(){
+    private JPanel criarPainelTitulo() {
+        JPanel painel = new JPanel(new GridLayout(2, 1));
+        JLabel tituloApp = new JLabel("CADASTRO DE EQUIPES", SwingConstants.CENTER);
+        tituloApp.setFont(new Font(tituloApp.getFont().getName(), Font.BOLD, 16));
+        JLabel sloganApp = new JLabel("Preencha com os dados da equipe (2 Centrais, 2 Ponteiros, 1 Levantador, 1 Libero, 1 Oposto)", SwingConstants.CENTER);
+        painel.add(tituloApp);
+        painel.add(sloganApp);
+        return painel;
+    }
+
+    private JPanel criarPainelCentral() {
+        JPanel painel = new JPanel(new BorderLayout(10, 10));
+
+        JPanel wrapperPainelDadosEquipe = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        wrapperPainelDadosEquipe.add(criarPainelDadosEquipe());
+        painel.add(wrapperPainelDadosEquipe, BorderLayout.NORTH);
+        
+        JPanel painelSplit = new JPanel(new GridLayout(1, 2, 10, 10));
+        painelSplit.add(criarPainelFormJogador());
+        JScrollPane scrollPaneTabela = new JScrollPane(tabelaEscalacao);
+        painelSplit.add(scrollPaneTabela);
+        
+        painel.add(painelSplit, BorderLayout.CENTER);
+        return painel;
+    }
+
+    private JPanel criarPainelDadosEquipe() {
+        JPanel painel = new JPanel(new GridBagLayout());
+        painel.setBorder(BorderFactory.createTitledBorder("Dados da Equipe"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        painel.add(new JLabel("Equipe:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        painel.add(textEquipeNome, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0;
+        painel.add(new JLabel("Ranking:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL; gbc.weightx = 1.0;
+        painel.add(textRanking, gbc);
+        
+        return painel;
+    }
+
+    private JPanel criarPainelFormJogador() {
+        JPanel painel = new JPanel(new GridBagLayout());
+        painel.setBorder(BorderFactory.createTitledBorder("Jogadores"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.weightx = 0.0; gbc.fill = GridBagConstraints.NONE;
+        painel.add(new JLabel("Nome:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL;
+        painel.add(textJogadorNome, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.weightx = 0.0; gbc.fill = GridBagConstraints.NONE;
+        painel.add(new JLabel("Número:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL;
+        painel.add(textJogadorNumero, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.weightx = 0.0; gbc.fill = GridBagConstraints.NONE;
+        painel.add(new JLabel("Altura (cm):"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL;
+        painel.add(textJogadorAltura, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.weightx = 0.0; gbc.fill = GridBagConstraints.NONE;
+        painel.add(new JLabel("Função:"), gbc);
+
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.weightx = 1.0; gbc.fill = GridBagConstraints.HORIZONTAL;
+        painel.add(comboJogadorFuncao, gbc);
+
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.weighty = 1.0;
+        painel.add(new JLabel(""), gbc);
+
+        return painel;
+    }
+
+    private JPanel criarPainelBotoes() {
+        JPanel painel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        painel.add(buttonCadastrarJogador);
+        painel.add(buttonExcluirJogador);
+        painel.add(buttonConfirmar);
+        painel.add(buttonVoltar);
+        return painel;
+    }
+    
+    private void adicionarJogador() {
+        if (textJogadorNome.getText().isBlank() || textJogadorNumero.getText().isBlank() || textJogadorAltura.getText().isBlank()) {
+            JOptionPane.showMessageDialog(frame, "Preencha todos os campos do jogador.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String funcaoSelecionada = comboJogadorFuncao.getSelectedItem().toString();
+        
+        int[] limites = {2, 1, 1, 1, 2}; // Central, Levantador, Libero, Oposto, Ponteiro
+        String[] funcoes = {CENTRAL, LEVANTADOR, LIBERO, OPOSTO, PONTEIRO};
+        int[] contagemAtual = new int[5];
+
+        for (int i = 0; i < tableModel.getRowCount(); i++) {
+            String funcaoNaTabela = tableModel.getValueAt(i, 3).toString();
+            for(int j = 0; j < funcoes.length; j++){
+                if(funcaoNaTabela.equals(funcoes[j])){
+                    contagemAtual[j]++;
+                }
+            }
+        }
+        
+        for(int i = 0; i < funcoes.length; i++){
+            if(funcaoSelecionada.equals(funcoes[i]) && contagemAtual[i] >= limites[i]){
+                JOptionPane.showMessageDialog(frame, "A função " + funcaoSelecionada + " já atingiu o número máximo de jogadores (" + limites[i] + ").", "Limite Atingido", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+
+        String[] dados = {
+            textJogadorNome.getText(), 
+            textJogadorNumero.getText(), 
+            textJogadorAltura.getText(), 
+            funcaoSelecionada
+        };
+        tableModel.addRow(dados);
+        
+        textJogadorNome.setText("");
+        textJogadorNumero.setText("");
+        textJogadorAltura.setText("");
+    }
+    
+    private void excluirJogador() {
+        int selectedRow = tabelaEscalacao.getSelectedRow();
+        if (selectedRow != -1) {
+            tableModel.removeRow(selectedRow);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Selecione um jogador na tabela para excluir.", "Aviso", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+    
+    private void confirmarCadastro() {
+        if (textEquipeNome.getText().isBlank() || textRanking.getText().isBlank()) {
+            JOptionPane.showMessageDialog(frame, "Preencha o nome e o ranking da equipe.", "Aviso", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (tableModel.getRowCount() != 7) {
+             JOptionPane.showMessageDialog(frame, "A equipe deve ter exatamente 7 jogadores para ser cadastrada.", "Equipe Incompleta", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        Equipe equipe = new Equipe(textEquipeNome.getText(), Integer.parseInt(textRanking.getText()));
+        Vector<Vector> dataVector = tableModel.getDataVector();
+
+        for (Vector<?> rowData : dataVector) {
+            String nome = rowData.get(0).toString();
+            String numero = rowData.get(1).toString();
+            String altura = rowData.get(2).toString();
+            String funcao = rowData.get(3).toString();
+
+            switch (funcao) {
+                case CENTRAL -> equipe.escalarJogador(new Central(nome, equipe.getNome(), funcao, numero, altura));
+                case LEVANTADOR -> equipe.escalarJogador(new Levantador(nome, equipe.getNome(), funcao, numero, altura));
+                case LIBERO -> equipe.escalarJogador(new Libero(nome, equipe.getNome(), funcao, numero, altura));
+                case OPOSTO -> equipe.escalarJogador(new Oposto(nome, equipe.getNome(), funcao, numero, altura));
+                case PONTEIRO -> equipe.escalarJogador(new Ponteiro(nome, equipe.getNome(), funcao, numero, altura));
+            }
+        }
+        
+        salvarEquipeComoJson(equipe);
+        
+        JOptionPane.showMessageDialog(frame, "Equipe " + equipe.getNome() + " cadastrada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+        frame.dispose();
+    }
+    
+    private void salvarEquipeComoJson(Equipe equipe){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        String path = "src/br/com/daviaires/poo/projetofinal/objetos/equipes/" + equipe.getNome() + ".json";
+
+        try (FileWriter fw = new FileWriter(path)) {
+            gson.toJson(equipe, fw);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(frame, "Erro ao salvar o arquivo: " + e.getMessage(), "Erro de I/O", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    private void voltarTela() {
+        frame.dispose();
+    }
+
+    public void show() {
         frame.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            new CadastraEquipe().show();
+        });
     }
 }
