@@ -3,6 +3,8 @@ package br.com.daviaires.poo.projetofinal.telas;
 import br.com.daviaires.poo.projetofinal.App;
 import br.com.daviaires.poo.projetofinal.equipe.Equipe;
 import br.com.daviaires.poo.projetofinal.jogador.*;
+import br.com.daviaires.poo.projetofinal.validacao.Validardor;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -149,38 +151,10 @@ public class CadastraEquipe {
                 if(!textJogadorNome.getText().isBlank() && !textJogadorNumero.getText().isBlank() && !textJogadorAltura.getText().isBlank()) {
                     String[] dados = {textJogadorNome.getText(), textJogadorNumero.getText(), textJogadorAltura.getText(), comboJogadorFuncao.getSelectedItem().toString()};
                     DefaultTableModel tableModel = (DefaultTableModel) tabelaEscalacao.getModel();
-                    int[] quantfuncao = {0, 0, 0, 0, 0};
-                    for (int i = 0; i < tableModel.getRowCount(); i++) {
-                        switch (tableModel.getValueAt(i, 3).toString()) {
-                            case "Central":
-                                quantfuncao[0]++;
-                                break;
-                            case "Levantador":
-                                quantfuncao[1]++;
-                                break;
-                            case "Líbero":
-                                quantfuncao[2]++;
-                                break;
-                            case "Oposto":
-                                quantfuncao[3]++;
-                                break;
-                            case "Ponteiro":
-                                quantfuncao[4]++;
-                                break;
-
-                            default:
-                                JOptionPane.showMessageDialog(buttonCadastrarJogador, "Função inexistente", "Aviso", JOptionPane.ERROR_MESSAGE);
-                                break;
-                        }
-                    }
-                    if ((quantfuncao[0] == 2 && dados[3] == "Central") ||
-                            (quantfuncao[1] == 1 && dados[3] == "Levantador") ||
-                            (quantfuncao[2] == 1 && dados[3] == "Líbero") ||
-                            (quantfuncao[3] == 1 && dados[3] == "Oposto") ||
-                            (quantfuncao[4] == 2 && dados[3] == "Ponteiro")) {
-                        JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
-                    } else {
+                    if (Validardor.validarQuantFuncao(tableModel, dados)) {
                         tableModel.addRow(dados);
+                    } else {
+                        JOptionPane.showMessageDialog(buttonCadastrarJogador, "a função {" + dados[3] + "} está na quantidade maxima de jogadores!", "Aviso", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -197,6 +171,8 @@ public class CadastraEquipe {
                DefaultTableModel tblModel = (DefaultTableModel)tabelaEscalacao.getModel();
                if(tabelaEscalacao.getSelectedRowCount()==1){
                    tblModel.removeRow(tabelaEscalacao.getSelectedRow());
+               } else {
+                JOptionPane.showMessageDialog(buttonCadastrarJogador, "Selecione o jogador que deseja excluir!", "Aviso", JOptionPane.ERROR_MESSAGE);
                }
            }
         });
@@ -216,7 +192,7 @@ public class CadastraEquipe {
                     Vector rowData = dataVector.elementAt(i);
                     switch (rowData.elementAt(3).toString()){
                         case "Central":
-                                equipe.escalarJogador(new Central(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
+                            equipe.escalarJogador(new Central(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
                             break;
                         case "Levantador":
                             equipe.escalarJogador(new Levantador(rowData.elementAt(0).toString(),equipe.getNome(), rowData.elementAt(3).toString(),rowData.elementAt(1).toString(),rowData.elementAt(2).toString()));
@@ -234,26 +210,30 @@ public class CadastraEquipe {
                             break;
                     }
                 }
-                Gson gson = new GsonBuilder()
-                        .setPrettyPrinting()
-                        .create();
-                FileWriter fw = null;
-                try {
-                    fw = new FileWriter("src/br/com/daviaires/poo/projetofinal/objetos/equipes/" + equipe.getNome() + ".json");
-                } catch (IOException exception) {
-                    throw new RuntimeException(exception);
+                if(Validardor.validarDadosTamanhoEquipe(equipe)) {
+                    Gson gson = new GsonBuilder()
+                    .setPrettyPrinting()
+                    .create();
+                    FileWriter fw = null;
+                    try {
+                        fw = new FileWriter("src/br/com/daviaires/poo/projetofinal/objetos/equipes/" + equipe.getNome() + ".json");
+                    } catch (IOException exception) {
+                        throw new RuntimeException(exception);
+                    }
+                    gson.toJson(equipe, fw);
+                    try {
+                        fw.close();
+                    } catch (IOException exception) {
+                        throw new RuntimeException(exception);
+                    }
+                    EquipeCadastrada equipeCadastrada = new EquipeCadastrada();
+                    equipeCadastrada.inicializa();
+                    equipeCadastrada.show();
+                    System.out.println(equipe.getNome() + " cadastrada");
+                    frame.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(buttonConfirmar, "É necessário ter um total de 7 jogadores em uma partida", "Aviso", JOptionPane.ERROR_MESSAGE);
                 }
-                gson.toJson(equipe, fw);
-                try {
-                    fw.close();
-                } catch (IOException exception) {
-                    throw new RuntimeException(exception);
-                }
-                EquipeCadastrada equipeCadastrada = new EquipeCadastrada();
-                equipeCadastrada.inicializa();
-                equipeCadastrada.show();
-                System.out.println(equipe.getNome() + " cadastrada");
-                frame.dispose();
             }
         });
 
