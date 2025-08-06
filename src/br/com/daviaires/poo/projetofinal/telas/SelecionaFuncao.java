@@ -101,8 +101,7 @@ public class SelecionaFuncao {
         buttonIniciarPartida.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Partida partida = new Partida();
-                partida.inicializa();
+                Partida partida = new Partida(equipesSelecionadas);
                 partida.show();
                 frame.dispose();
             }

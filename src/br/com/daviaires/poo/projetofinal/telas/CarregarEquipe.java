@@ -3,6 +3,9 @@ package br.com.daviaires.poo.projetofinal.telas;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import br.com.daviaires.poo.projetofinal.equipe.Equipe;
@@ -10,6 +13,7 @@ import br.com.daviaires.poo.projetofinal.jogador.Jogador;
 
 import java.awt.*;
 import java.io.FileReader;
+import java.io.Reader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -130,6 +134,7 @@ public class CarregarEquipe extends JFrame {
 
         SelecionaFuncao selecionaFuncao = new SelecionaFuncao(listaDeEquipesSelecionadas);
         selecionaFuncao.show();
+        setVisible(false);
     }
 
     public static void main(String[] args) {

@@ -2,7 +2,19 @@ package br.com.daviaires.poo.projetofinal.telas;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+
+import com.google.gson.JsonObject;
+
+import br.com.daviaires.poo.projetofinal.equipe.Equipe;
+import br.com.daviaires.poo.projetofinal.jogador.Central;
+import br.com.daviaires.poo.projetofinal.jogador.Levantador;
+import br.com.daviaires.poo.projetofinal.jogador.Libero;
+import br.com.daviaires.poo.projetofinal.jogador.Oposto;
+import br.com.daviaires.poo.projetofinal.jogador.Ponteiro;
+
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Partida {
     private JFrame frame;
@@ -15,8 +27,8 @@ public class Partida {
     private DefaultListModel<String> historicoModel;
     private JList<String> historicoList;
 
-    public Partida() {
-        inicializa();
+    public Partida(List<Equipe> equipesSelecionadas) {
+        inicializa(equipesSelecionadas);
     }
 
     private class HistoricoCellRenderer extends JLabel implements ListCellRenderer<String> {
@@ -43,10 +55,10 @@ public class Partida {
         }
     }
 
-    public void inicializa() {
+    public void inicializa(List<Equipe> equipesSelecionadas) {
         frame = new JFrame();
         this.frame.setTitle("Partida");
-        this.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.frame.setSize(1024, 768);
         this.frame.setResizable(true);
         this.frame.setLocationRelativeTo(null);
@@ -59,12 +71,15 @@ public class Partida {
         containerPlacar.setBorder(BorderFactory.createTitledBorder("Placar"));
         containerPlacar.add(placarPanel, BorderLayout.CENTER);
 
+        String timeA = equipesSelecionadas != null ? equipesSelecionadas.get(0).getNome() : "Time A";
+        String timeB = equipesSelecionadas != null ? equipesSelecionadas.get(1).getNome() : "Time B";
+
         JPanel panelTimeA = new JPanel();
         panelTimeA.setBackground(Color.decode("#f0f0f0"));
         JButton btnMaisPontoA = new JButton("+1");
         JButton btnMenosPontoA = new JButton("-1");
         JButton btnTempoA = new JButton("Pedir Tempo");
-        panelTimeA.add(new JLabel("Time A"));
+        panelTimeA.add(new JLabel(timeA));
         panelTimeA.add(btnMaisPontoA);
         panelTimeA.add(btnMenosPontoA);
         panelTimeA.add(btnTempoA);
@@ -84,7 +99,7 @@ public class Partida {
         JButton btnMaisPontoB = new JButton("+1");
         JButton btnMenosPontoB = new JButton("-1");
         JButton btnTempoB = new JButton("Pedir Tempo");
-        panelTimeB.add(new JLabel("Time B"));
+        panelTimeB.add(new JLabel(timeB));
         panelTimeB.add(btnMaisPontoB);
         panelTimeB.add(btnMenosPontoB);
         panelTimeB.add(btnTempoB);
@@ -113,29 +128,29 @@ public class Partida {
 
         btnMaisPontoA.addActionListener(e -> {
             placarTimeA++;
-            atualizarPlacarEHistorico("Ponto para o Time A.");
+            atualizarPlacarEHistorico("Ponto para " + timeA);
         });
         btnMenosPontoA.addActionListener(e -> {
             if (placarTimeA > 0) {
                 placarTimeA--;
-                atualizarPlacarEHistorico("Ponto removido do Time A.");
+                atualizarPlacarEHistorico("Ponto removido do(a) " + timeA);
             }
         });
         btnTempoA.addActionListener(e -> {
-            adicionarAoHistorico("Time A pediu tempo.");
+            adicionarAoHistorico(timeA + " pediu tempo.");
         });
         btnMaisPontoB.addActionListener(e -> {
             placarTimeB++;
-            atualizarPlacarEHistorico("Ponto para o Time B.");
+            atualizarPlacarEHistorico("Ponto para " + timeB);
         });
         btnMenosPontoB.addActionListener(e -> {
             if (placarTimeB > 0) {
                 placarTimeB--;
-                atualizarPlacarEHistorico("Ponto removido do Time B.");
+                atualizarPlacarEHistorico("Ponto removido do(a)" + timeB);
             }
         });
         btnTempoB.addActionListener(e -> {
-            adicionarAoHistorico("Time B pediu tempo.");
+            adicionarAoHistorico(timeB + " pediu tempo.");
         });
 
         JPanel quadraPanel = new JPanel(new GridLayout(1, 2, 20, 0));
@@ -145,6 +160,7 @@ public class Partida {
         JPanel ladoA = new JPanel(new GridLayout(3, 2, 10, 10));
         ladoA.setBackground(Color.WHITE);
         ladoA.setBorder(BorderFactory.createTitledBorder("Time A"));
+        
         for (int i = 0; i < 6; i++) {
             ladoA.add(new JLabel("Jogador A" + (i + 1), SwingConstants.CENTER));
         }
@@ -176,7 +192,7 @@ public class Partida {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Partida telaPartida = new Partida();
+            Partida telaPartida = new Partida(null);
             telaPartida.show();
         });
     }
